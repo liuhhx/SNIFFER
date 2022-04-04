@@ -180,6 +180,18 @@ namespace WinFormsSniffer
             }
         }
 
+        private void Close_Click(object sender, EventArgs e)
+        {
+            sniffing.Abort();
+            wifi_device.StopCapture();
+            wifi_device.Close();
+            captureFileWriter.Close();
+
+            Start.Enabled = true;
+            textBox1.Enabled = true;
+            Close.Enabled = false;
+        }
+
         public SnifferForm(List<LibPcapLiveDevice> interfaces, int selectedIndex)
         {
             InitializeComponent();
@@ -261,9 +273,11 @@ namespace WinFormsSniffer
                 item.SubItems.Add(destinationIP);
                 item.SubItems.Add(protocol_type);
                 item.SubItems.Add(length);
-
-                void Action() => listView1.Items.Add(item);
-                listView1.Invoke((Action) Action);
+                // 这个语法糖效果不太好
+                /*void Action() => listView1.Items.Add(item);
+                listView1.Invoke((Action) Action);*/
+                Action action = () => listView1.Items.Add(item);
+                listView1.Invoke(action);
                 ++packetNumber;
             }
         }

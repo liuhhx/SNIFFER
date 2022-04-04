@@ -77,6 +77,7 @@ namespace WinFormsSniffer
             this.Close.Name = "Close";
             this.Close.Size = new System.Drawing.Size(29, 24);
             this.Close.Text = "结束";
+            this.Close.Click += new System.EventHandler(this.Close_Click);
             // 
             // textBox1
             // 
