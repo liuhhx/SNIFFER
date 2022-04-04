@@ -8,6 +8,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -27,6 +28,7 @@ namespace WinFormsSniffer
         private bool StartSniffing = false;
 
         Thread sniffing;
+
         /// <summary>
         /// 包信息
         /// </summary>
@@ -34,8 +36,8 @@ namespace WinFormsSniffer
         /// <param name="e"></param>
         private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            string protocol = e.Item.SubItems[4].Text;// todo 这是啥
-            int key  = Int32.Parse(e.Item.SubItems[0].Text);
+            string protocol = e.Item.SubItems[4].Text; // todo 这是啥
+            int key = Int32.Parse(e.Item.SubItems[0].Text);
             Packet packet;
             bool getPacket = capturedPackets_list.TryGetValue(key, out packet);
 
@@ -52,14 +54,129 @@ namespace WinFormsSniffer
                             var checksum = tcpPacket.Checksum;
 
                             textBox2.Text = "";
-                            textBox2.Text="Packet number:"+key+
-                                          "协议:TCP"+
-                                          "\r\n源地址："+srcPort+
-                                          "\r\n目的地址："+desPort+
-                                          "\r\nTCP头部大小："+tcpPacket.DataOffset+
-                                          ""
+                            textBox2.Text = "Packet number:" + key +
+                                            "协议:TCP" +
+                                            "\r\n源地址：" + srcPort +
+                                            "\r\n目的地址：" + desPort +
+                                            "\r\nTCP头部大小：" + tcpPacket.DataOffset +
+                                            "\r\n窗口大小：" + tcpPacket.WindowSize +
+                                            "\r\nCheckSum:" + checksum +
+                                            (tcpPacket.ValidChecksum ? ",valid" : "invalid") +
+                                            "\r\nTCP CheckSum:" + (tcpPacket.ValidChecksum ? ",valid" : ",invalid") +
+                                            "\r\nSequence number:" + tcpPacket.SequenceNumber +
+                                            "\r\nAcknowledgement number:" + tcpPacket.AcknowledgmentNumber +
+                                            (tcpPacket.Ack ? ",valid" : ",invalid") +
+                                            "\r\nUrgent pointer: " + (tcpPacket.Urg ? "valid" : "invalid") +
+                                            "\r\nACK flag: " +
+                                            (tcpPacket.Ack
+                                                ? "1"
+                                                : "0") + // indicates if the AcknowledgmentNumber is valid
+                                            "\r\nPSH flag: " +
+                                            (tcpPacket.Psh
+                                                ? "1"
+                                                : "0"
+                                            ) + // push 1 = the receiver should pass the data to the app immidiatly, don't buffer it
+                                            "\r\nRST flag: " +
+                                            (tcpPacket.Rst ? "1" : "0") + // reset 1 is to abort existing connection
+                                            // SYN indicates the sequence numbers should be synchronized between the sender and receiver to initiate a connection
+                                            "\r\nSYN flag: " + (tcpPacket.Syn ? "1" : "0") +
+                                            // closing the connection with a deal, host_A sends FIN to host_B, B responds with ACK
+                                            // FIN flag indicates the sender is finished sending
+                                            "\r\nFIN flag: " + (tcpPacket.Fin ? "1" : "0") +
+                                            "\r\nECN flag: " + (tcpPacket.ECN ? "1" : "0") +
+                                            "\r\nCWR flag: " + (tcpPacket.CWR ? "1" : "0") +
+                                            "\r\nNS flag: " + (tcpPacket.NS ? "1" : "0");
                         }
                     }
+
+                    break;
+                case "UDP":
+                    if (getPacket)
+                    {
+                        var udpPacket = (UdpPacket) packet.Extract(typeof(UdpPacket));
+                        if (udpPacket != null)
+                        {
+                            int srcPort = udpPacket.SourcePort;
+                            int dstPort = udpPacket.DestinationPort;
+                            var checksum = udpPacket.Checksum;
+
+                            textBox2.Text = "";
+                            textBox2.Text = "Packet number: " + key +
+                                            " Type: UDP" +
+                                            "\r\nSource port:" + srcPort +
+                                            "\r\nDestination port: " + dstPort +
+                                            "\r\nChecksum:" + checksum.ToString() + " valid: " +
+                                            udpPacket.ValidChecksum +
+                                            "\r\nValid UDP checksum: " + udpPacket.ValidUDPChecksum;
+                        }
+                    }
+
+                    break;
+                case "ARP":
+                    if (getPacket)
+                    {
+                        var arpPacket = (ARPPacket) packet.Extract(typeof(ARPPacket));
+                        if (arpPacket != null)
+                        {
+                            System.Net.IPAddress senderAddress = arpPacket.SenderProtocolAddress;
+                            System.Net.IPAddress targerAddress = arpPacket.TargetProtocolAddress;
+                            System.Net.NetworkInformation.PhysicalAddress senderHardwareAddress =
+                                arpPacket.SenderHardwareAddress;
+                            System.Net.NetworkInformation.PhysicalAddress targerHardwareAddress =
+                                arpPacket.TargetHardwareAddress;
+
+                            textBox2.Text = "";
+                            textBox2.Text = "Packet number: " + key +
+                                            " Type: ARP" +
+                                            "\r\nHardware address length:" + arpPacket.HardwareAddressLength +
+                                            "\r\nProtocol address length: " + arpPacket.ProtocolAddressLength +
+                                            "\r\nOperation: " +
+                                            arpPacket.Operation
+                                                .ToString() + // ARP request or ARP reply ARP_OP_REQ_CODE, ARP_OP_REP_CODE
+                                            "\r\nSender protocol address: " + senderAddress +
+                                            "\r\nTarget protocol address: " + targerAddress +
+                                            "\r\nSender hardware address: " + senderHardwareAddress +
+                                            "\r\nTarget hardware address: " + targerHardwareAddress;
+                        }
+                    }
+
+                    break;
+                case "ICMP":
+                    if (getPacket)
+                    {
+                        var icmpPacket = (ICMPv4Packet) packet.Extract(typeof(ICMPv4Packet));
+                        if (icmpPacket != null)
+                        {
+                            textBox2.Text = "";
+                            textBox2.Text = "Packet number: " + key +
+                                            " Type: ICMP v4" +
+                                            "\r\nType Code: 0x" + icmpPacket.TypeCode.ToString("x") +
+                                            "\r\nChecksum: " + icmpPacket.Checksum.ToString("x") +
+                                            "\r\nID: 0x" + icmpPacket.ID.ToString("x") +
+                                            "\r\nSequence number: " + icmpPacket.Sequence.ToString("x");
+                        }
+                    }
+
+                    break;
+                case "IGMP":
+                    if (getPacket)
+                    {
+                        var igmpPacket = (IGMPv2Packet) packet.Extract(typeof(IGMPv2Packet));
+                        if (igmpPacket != null)
+                        {
+                            textBox2.Text = "";
+                            textBox2.Text = "Packet number: " + key +
+                                            " Type: IGMP v2" +
+                                            "\r\nType: " + igmpPacket.Type +
+                                            "\r\nGroup address: " + igmpPacket.GroupAddress +
+                                            "\r\nMax response time" + igmpPacket.MaxResponseTime;
+                        }
+                    }
+
+                    break;
+                default:
+                    textBox2.Text = "";
+                    break;
             }
         }
 
@@ -161,7 +278,8 @@ namespace WinFormsSniffer
             if (wifi_device.Opened)
             {
                 if (textBox1.Text != "") wifi_device.Filter = textBox1.Text;
-                captureFileWriter = new CaptureFileWriterDevice(wifi_device,Environment.CurrentDirectory+"sniffer.pcap");
+                captureFileWriter =
+                    new CaptureFileWriterDevice(wifi_device, Environment.CurrentDirectory + "sniffer.pcap");
                 wifi_device.Capture();
             }
         }
