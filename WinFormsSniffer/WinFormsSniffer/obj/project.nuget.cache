@@ -1,8 +1,32 @@
 {
   "version": 2,
-  "dgSpecHash": "tnWVzc8l3PEsGPno/eviVtUoqDwI7mVHsTv2sCoIXTEinpqCEjJLSTn7NuOX4YB3dILxY5VwoKqvmsogjQFxCg==",
+  "dgSpecHash": "QFy6a/mP8ddoNiSHOw4Z8xcw1wGJwhz7e2Hx/TtnkUxUhCGZB/EuWDb9sX07cED49dFuJmisy7S7Mx7IgOEo+w==",
   "success": true,
   "projectFilePath": "F:\\UCAS_yanqihu\\project\\InternetAD\\repo\\WinFormsSniffer\\WinFormsSniffer\\WinFormsSniffer.csproj",
-  "expectedPackageFiles": [],
-  "logs": []
+  "expectedPackageFiles": [
+    "C:\\Users\\dell\\.nuget\\packages\\packetdotnet\\0.16.0\\packetdotnet.0.16.0.nupkg.sha512",
+    "C:\\Users\\dell\\.nuget\\packages\\sharppcap\\4.4.0\\sharppcap.4.4.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "已使用“.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8”而不是项目目标框架“.NETCoreApp,Version=v3.1”还原包“PacketDotNet 0.16.0”。此包可能与项目不完全兼容。",
+      "libraryId": "PacketDotNet",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "已使用“.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8”而不是项目目标框架“.NETCoreApp,Version=v3.1”还原包“SharpPcap 4.4.0”。此包可能与项目不完全兼容。",
+      "libraryId": "SharpPcap",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

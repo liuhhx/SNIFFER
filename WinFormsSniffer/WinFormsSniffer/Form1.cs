@@ -33,15 +33,12 @@ namespace WinFormsSniffer
                 Socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw,protocolType:ProtocolType.IP);
 
                 IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
-                if (ipHost!=null)
-                {
-                    Socket.Bind(new IPEndPoint(ipHost.AddressList[3],0));
-                }
+                Socket.Bind(new IPEndPoint(ipHost.AddressList[8],0));
+                // 使用了与请求的协议不兼容的地址
 
                 Socket.IOControl(IOControlCode.ReceiveAll, inBytes, outBytes);
                 sniffer_button.Enabled = false;
-                Thread thread = new Thread(CatchPacket);
-                thread.IsBackground = true;
+                Thread thread = new Thread(CatchPacket) {IsBackground = true};
                 thread.Start(Socket);
             }
             catch (Exception exception)

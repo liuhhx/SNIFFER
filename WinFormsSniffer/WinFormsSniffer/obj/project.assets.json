@@ -1,11 +1,60 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v3.1": {}
+    ".NETCoreApp,Version=v3.1": {
+      "PacketDotNet/0.16.0": {
+        "type": "package",
+        "compile": {
+          "lib/PacketDotNet.dll": {}
+        },
+        "runtime": {
+          "lib/PacketDotNet.dll": {}
+        }
+      },
+      "SharpPcap/4.4.0": {
+        "type": "package",
+        "dependencies": {
+          "PacketDotNet": "0.16.0"
+        },
+        "compile": {
+          "lib/SharpPcap.dll": {}
+        },
+        "runtime": {
+          "lib/SharpPcap.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "PacketDotNet/0.16.0": {
+      "sha512": "YCUxECxGHPJsGNqgV8DhgKklbuF+yRYqUu64zbacs1M5r+A3jU+PiTaJfUP8zmYccuMdgf7yDniKRZijQKtq9Q==",
+      "type": "package",
+      "path": "packetdotnet/0.16.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/PacketDotNet.dll",
+        "packetdotnet.0.16.0.nupkg.sha512",
+        "packetdotnet.nuspec"
+      ]
+    },
+    "SharpPcap/4.4.0": {
+      "sha512": "MaT/kXaMKak1PwiQx78TBcih+Po/irdNyrq1afzNHyPyiIf/EE0C+SyoZLVIhsI17TYxagYM9RadFaVYUj2Bhw==",
+      "type": "package",
+      "path": "sharppcap/4.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/SharpPcap.dll",
+        "sharppcap.4.4.0.nupkg.sha512",
+        "sharppcap.nuspec"
+      ]
+    }
+  },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v3.1": []
+    ".NETCoreApp,Version=v3.1": [
+      "SharpPcap >= 4.4.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\dell\\.nuget\\packages\\": {},
@@ -52,6 +101,12 @@
     "frameworks": {
       "netcoreapp3.1": {
         "targetAlias": "netcoreapp3.1",
+        "dependencies": {
+          "SharpPcap": {
+            "target": "Package",
+            "version": "[4.4.0, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",
@@ -73,5 +128,27 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.403\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "已使用“.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8”而不是项目目标框架“.NETCoreApp,Version=v3.1”还原包“PacketDotNet 0.16.0”。此包可能与项目不完全兼容。",
+      "libraryId": "PacketDotNet",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "已使用“.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8”而不是项目目标框架“.NETCoreApp,Version=v3.1”还原包“SharpPcap 4.4.0”。此包可能与项目不完全兼容。",
+      "libraryId": "SharpPcap",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }
