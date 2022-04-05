@@ -24,9 +24,7 @@ namespace WinFormsSniffer
         Dictionary<int, Packet> capturedPackets_list = new Dictionary<int, Packet>();
         int packetNumber = 1;
         string time_str = "", sourceIP = "", destinationIP = "", protocol_type = "", length = "";
-
         private bool StartSniffing = false;
-
         Thread sniffing;
 
         /// <summary>
@@ -36,7 +34,7 @@ namespace WinFormsSniffer
         /// <param name="e"></param>
         private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            string protocol = e.Item.SubItems[4].Text; // todo 这是啥
+            string protocol = e.Item.SubItems[4].Text; // 第五列内容值 也就是协议值
             int key = Int32.Parse(e.Item.SubItems[0].Text);
             Packet packet;
             bool getPacket = capturedPackets_list.TryGetValue(key, out packet);
@@ -52,45 +50,44 @@ namespace WinFormsSniffer
                             int srcPort = tcpPacket.SourcePort;
                             int desPort = tcpPacket.DestinationPort;
                             var checksum = tcpPacket.Checksum;
-
                             textBox2.Text = "";
-                            textBox2.Text = "Packet number:" + key +
-                                            "协议:TCP" +
+                            textBox2.Text = "序号:" + key +
+                                            "\r\n协议:TCP" +
                                             "\r\n源地址：" + srcPort +
                                             "\r\n目的地址：" + desPort +
                                             "\r\nTCP头部大小：" + tcpPacket.DataOffset +
                                             "\r\n窗口大小：" + tcpPacket.WindowSize +
-                                            "\r\nCheckSum:" + checksum +
+                                            "\r\n校验和:" + checksum +
                                             (tcpPacket.ValidChecksum ? ",valid" : "invalid") +
-                                            "\r\nTCP CheckSum:" + (tcpPacket.ValidChecksum ? ",valid" : ",invalid") +
-                                            "\r\nSequence number:" + tcpPacket.SequenceNumber +
-                                            "\r\nAcknowledgement number:" + tcpPacket.AcknowledgmentNumber +
+                                            "\r\nTCP检验和:" + (tcpPacket.ValidChecksum ? ",valid" : ",invalid") +
+                                            "\r\n序列号:" + tcpPacket.SequenceNumber +
+                                            "\r\n确认号:" + tcpPacket.AcknowledgmentNumber +
                                             (tcpPacket.Ack ? ",valid" : ",invalid") +
                                             "\r\nUrgent pointer: " + (tcpPacket.Urg ? "valid" : "invalid") +
                                             "\r\nACK flag: " +
                                             (tcpPacket.Ack
                                                 ? "1"
-                                                : "0") + // indicates if the AcknowledgmentNumber is valid
+                                                : "0") + // 确认号有效
                                             "\r\nPSH flag: " +
                                             (tcpPacket.Psh
                                                 ? "1"
                                                 : "0"
-                                            ) + // push 1 = the receiver should pass the data to the app immidiatly, don't buffer it
+                                            ) + // 1 接收者会立即将数据传递给app,而不会缓冲
                                             "\r\nRST flag: " +
-                                            (tcpPacket.Rst ? "1" : "0") + // reset 1 is to abort existing connection
-                                            // SYN indicates the sequence numbers should be synchronized between the sender and receiver to initiate a connection
+                                            (tcpPacket.Rst ? "1" : "0") + // 1 终止现有连接
+                                            // SYN表示发送方和接收方以同步序号发起连接
                                             "\r\nSYN flag: " + (tcpPacket.Syn ? "1" : "0") +
-                                            // closing the connection with a deal, host_A sends FIN to host_B, B responds with ACK
-                                            // FIN flag indicates the sender is finished sending
+                                            // 关闭连接，A向B发送FIN,B回一个ACK
+                                            // FIN flag 表示发送方以完成发送
                                             "\r\nFIN flag: " + (tcpPacket.Fin ? "1" : "0") +
                                             "\r\nECN flag: " + (tcpPacket.ECN ? "1" : "0") +
                                             "\r\nCWR flag: " + (tcpPacket.CWR ? "1" : "0") +
                                             "\r\nNS flag: " + (tcpPacket.NS ? "1" : "0");
                         }
                     }
-
                     break;
                 case "UDP":
+                    //todo 为什么UDP就会报An item with the same key has already been added. 这个错误呢？
                     if (getPacket)
                     {
                         var udpPacket = (UdpPacket) packet.Extract(typeof(UdpPacket));
@@ -101,16 +98,15 @@ namespace WinFormsSniffer
                             var checksum = udpPacket.Checksum;
 
                             textBox2.Text = "";
-                            textBox2.Text = "Packet number: " + key +
-                                            " Type: UDP" +
-                                            "\r\nSource port:" + srcPort +
-                                            "\r\nDestination port: " + dstPort +
-                                            "\r\nChecksum:" + checksum.ToString() + " valid: " +
+                            textBox2.Text = "包序号: " + key +
+                                            "\r\nType: UDP" +
+                                            "\r\n源地址:" + srcPort +
+                                            "\r\n目的地址: " + dstPort +
+                                            "\r\n校验和:" + checksum.ToString() + " valid: " +
                                             udpPacket.ValidChecksum +
-                                            "\r\nValid UDP checksum: " + udpPacket.ValidUDPChecksum;
+                                            "\r\n有效 UDP 校验和: " + udpPacket.ValidUDPChecksum;
                         }
                     }
-
                     break;
                 case "ARP":
                     if (getPacket)
@@ -119,27 +115,26 @@ namespace WinFormsSniffer
                         if (arpPacket != null)
                         {
                             System.Net.IPAddress senderAddress = arpPacket.SenderProtocolAddress;
-                            System.Net.IPAddress targerAddress = arpPacket.TargetProtocolAddress;
+                            System.Net.IPAddress targetAddress = arpPacket.TargetProtocolAddress;
                             System.Net.NetworkInformation.PhysicalAddress senderHardwareAddress =
                                 arpPacket.SenderHardwareAddress;
-                            System.Net.NetworkInformation.PhysicalAddress targerHardwareAddress =
+                            System.Net.NetworkInformation.PhysicalAddress targetHardwareAddress =
                                 arpPacket.TargetHardwareAddress;
 
                             textBox2.Text = "";
-                            textBox2.Text = "Packet number: " + key +
-                                            " Type: ARP" +
-                                            "\r\nHardware address length:" + arpPacket.HardwareAddressLength +
-                                            "\r\nProtocol address length: " + arpPacket.ProtocolAddressLength +
-                                            "\r\nOperation: " +
+                            textBox2.Text = "序号: " + key +
+                                            "\r\nType: ARP" +
+                                            "\r\n硬件地址长度:" + arpPacket.HardwareAddressLength +
+                                            "\r\n协议地址长度: " + arpPacket.ProtocolAddressLength +
+                                            "\r\n操作: " +
                                             arpPacket.Operation
                                                 .ToString() + // ARP request or ARP reply ARP_OP_REQ_CODE, ARP_OP_REP_CODE
-                                            "\r\nSender protocol address: " + senderAddress +
-                                            "\r\nTarget protocol address: " + targerAddress +
-                                            "\r\nSender hardware address: " + senderHardwareAddress +
-                                            "\r\nTarget hardware address: " + targerHardwareAddress;
+                                            "\r\n发送方协议地址: " + senderAddress +
+                                            "\r\n目标协议地址: " + targetAddress +
+                                            "\r\n发送方硬件地址: " + senderHardwareAddress +
+                                            "\r\n目标硬件地址: " + targetHardwareAddress;
                         }
                     }
-
                     break;
                 case "ICMP":
                     if (getPacket)
@@ -148,15 +143,14 @@ namespace WinFormsSniffer
                         if (icmpPacket != null)
                         {
                             textBox2.Text = "";
-                            textBox2.Text = "Packet number: " + key +
-                                            " Type: ICMP v4" +
+                            textBox2.Text = "序号: " + key +
+                                            "\r\nType: ICMP v4" +
                                             "\r\nType Code: 0x" + icmpPacket.TypeCode.ToString("x") +
-                                            "\r\nChecksum: " + icmpPacket.Checksum.ToString("x") +
+                                            "\r\n检验和: " + icmpPacket.Checksum.ToString("x") +
                                             "\r\nID: 0x" + icmpPacket.ID.ToString("x") +
-                                            "\r\nSequence number: " + icmpPacket.Sequence.ToString("x");
+                                            "\r\n序列号: " + icmpPacket.Sequence.ToString("x");
                         }
                     }
-
                     break;
                 case "IGMP":
                     if (getPacket)
@@ -165,14 +159,13 @@ namespace WinFormsSniffer
                         if (igmpPacket != null)
                         {
                             textBox2.Text = "";
-                            textBox2.Text = "Packet number: " + key +
-                                            " Type: IGMP v2" +
+                            textBox2.Text = "序号: " + key +
+                                            "\r\nType: IGMP v2" +
                                             "\r\nType: " + igmpPacket.Type +
-                                            "\r\nGroup address: " + igmpPacket.GroupAddress +
-                                            "\r\nMax response time" + igmpPacket.MaxResponseTime;
+                                            "\r\n组地址: " + igmpPacket.GroupAddress +
+                                            "\r\n最大响应时间" + igmpPacket.MaxResponseTime;
                         }
                     }
-
                     break;
                 default:
                     textBox2.Text = "";
@@ -182,7 +175,7 @@ namespace WinFormsSniffer
 
         private void Close_Click(object sender, EventArgs e)
         {
-            sniffing.Abort();
+            sniffing.Interrupt(); //todo 醒目 abort 在 dotnet core中好像不行
             wifi_device.StopCapture();
             wifi_device.Close();
             captureFileWriter.Close();
@@ -253,6 +246,7 @@ namespace WinFormsSniffer
             var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
             // 添加到list
 
+
             capturedPackets_list.Add(packetNumber, packet);
 
             var ipPacket = (IpPacket) packet.Extract(typeof(IpPacket));
@@ -273,6 +267,8 @@ namespace WinFormsSniffer
                 item.SubItems.Add(destinationIP);
                 item.SubItems.Add(protocol_type);
                 item.SubItems.Add(length);
+                // todo 以上这5项为什么不显示？
+                // listview设置问题
                 // 这个语法糖效果不太好
                 /*void Action() => listView1.Items.Add(item);
                 listView1.Invoke((Action) Action);*/

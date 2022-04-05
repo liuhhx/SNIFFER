@@ -110,27 +110,32 @@ namespace WinFormsSniffer
             this.listView1.Size = new System.Drawing.Size(696, 294);
             this.listView1.TabIndex = 3;
             this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
             // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "编号";
+            this.columnHeader1.Text = "序号";
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "起始时间";
+            this.columnHeader2.Width = 120;
             // 
             // columnHeader3
             // 
             this.columnHeader3.Text = "源地址";
+            this.columnHeader3.Width = 150;
             // 
             // columnHeader4
             // 
             this.columnHeader4.Text = "目的地址";
+            this.columnHeader4.Width = 150;
             // 
             // columnHeader5
             // 
             this.columnHeader5.Text = "协议";
+            this.columnHeader5.Width = 80;
             // 
             // columnHeader6
             // 
