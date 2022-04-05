@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Form1.cs" />
+    <Compile Remove="Form1.Designer.cs" />
+    <Compile Remove="IpHeader.cs" />
+    <Compile Remove="TcpHeader.cs" />
+    <Compile Remove="UdpHeader.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Form1.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="SharpPcap" Version="4.4.0" />
   </ItemGroup>
 
