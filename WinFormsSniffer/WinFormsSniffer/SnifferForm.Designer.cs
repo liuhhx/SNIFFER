@@ -57,7 +57,7 @@ namespace WinFormsSniffer
             this.Close});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(964, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(858, 27);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -148,7 +148,7 @@ namespace WinFormsSniffer
             this.textBox2.Location = new System.Drawing.Point(12, 528);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(500, 300);
+            this.textBox2.Size = new System.Drawing.Size(696, 300);
             this.textBox2.TabIndex = 4;
             // 
             // label3
@@ -182,7 +182,7 @@ namespace WinFormsSniffer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(964, 796);
+            this.ClientSize = new System.Drawing.Size(858, 849);
             this.Controls.Add(this.SelectNetCard);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label3);

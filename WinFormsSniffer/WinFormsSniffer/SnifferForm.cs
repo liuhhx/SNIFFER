@@ -202,6 +202,7 @@ namespace WinFormsSniffer
 
         private void SnifferForm_Load(object sender, EventArgs e)
         {
+            Close.Enabled = false;
             LibPcapLiveDeviceList devices = LibPcapLiveDeviceList.Instance; // 
 
             foreach (var device in devices)
@@ -283,10 +284,12 @@ namespace WinFormsSniffer
 
             var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
             // 添加到list
-
-
-            capturedPackets_list.Add(packetNumber, packet);
-
+            // 这里会报错，感觉是线程问题？
+            // 2022/04/06 21:39:03 没啥办法了 加判断吧
+            if (!capturedPackets_list.ContainsKey(packetNumber))
+            {
+                capturedPackets_list.Add(packetNumber, packet);
+            }
             var ipPacket = (IpPacket) packet.Extract(typeof(IpPacket));
 
             if (ipPacket != null)
@@ -319,7 +322,7 @@ namespace WinFormsSniffer
         private void Sniffing_Process()
         {
             // 打开设备准备嗅探
-            int readTimeoutMillisecondes = 1000;
+            int readTimeoutMillisecondes = 3000;
             wifi_device.Open(DeviceMode.Promiscuous, readTimeoutMillisecondes);
 
             // 开始嗅探
