@@ -44,6 +44,8 @@ namespace WinFormsSniffer
             this.columnHeader6 = new System.Windows.Forms.ColumnHeader();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.SelectNetCard = new System.Windows.Forms.ComboBox();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -81,7 +83,7 @@ namespace WinFormsSniffer
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 58);
+            this.textBox1.Location = new System.Drawing.Point(12, 122);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(556, 27);
             this.textBox1.TabIndex = 1;
@@ -89,7 +91,7 @@ namespace WinFormsSniffer
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 35);
+            this.label1.Location = new System.Drawing.Point(12, 99);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(54, 20);
             this.label1.TabIndex = 2;
@@ -105,7 +107,7 @@ namespace WinFormsSniffer
             this.columnHeader5,
             this.columnHeader6});
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(12, 115);
+            this.listView1.Location = new System.Drawing.Point(12, 179);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(696, 294);
             this.listView1.TabIndex = 3;
@@ -143,7 +145,7 @@ namespace WinFormsSniffer
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(12, 464);
+            this.textBox2.Location = new System.Drawing.Point(12, 528);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(500, 300);
@@ -152,17 +154,37 @@ namespace WinFormsSniffer
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 432);
+            this.label3.Location = new System.Drawing.Point(13, 496);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(69, 20);
             this.label3.TabIndex = 6;
             this.label3.Text = "详细信息";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 48);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(84, 20);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "选择网卡：";
+            // 
+            // SelectNetCard
+            // 
+            this.SelectNetCard.FormattingEnabled = true;
+            this.SelectNetCard.Location = new System.Drawing.Point(13, 71);
+            this.SelectNetCard.Name = "SelectNetCard";
+            this.SelectNetCard.Size = new System.Drawing.Size(555, 28);
+            this.SelectNetCard.TabIndex = 8;
+            this.SelectNetCard.SelectedIndexChanged += new System.EventHandler(this.SelectNetCard_SelectedIndexChanged);
             // 
             // SnifferForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(964, 796);
+            this.Controls.Add(this.SelectNetCard);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.listView1);
@@ -171,6 +193,7 @@ namespace WinFormsSniffer
             this.Controls.Add(this.toolStrip1);
             this.Name = "SnifferForm";
             this.Text = "SnifferForm";
+            this.Load += new System.EventHandler(this.SnifferForm_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -194,5 +217,7 @@ namespace WinFormsSniffer
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox SelectNetCard;
     }
 }

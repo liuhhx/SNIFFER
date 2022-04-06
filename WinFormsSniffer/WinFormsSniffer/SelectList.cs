@@ -42,9 +42,9 @@ namespace WinFormsSniffer
         {
             if (comboBox1.SelectedIndex >= 0 && comboBox1.SelectedIndex < interfaceList.Count)
             {
-                SnifferForm sniffer = new SnifferForm(interfaceList, comboBox1.SelectedIndex);
+               // SnifferForm sniffer = new SnifferForm(interfaceList, comboBox1.SelectedIndex);
                 Hide();
-                sniffer.Show();
+              //  sniffer.Show();
             }
         }
     }

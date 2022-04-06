@@ -17,7 +17,7 @@ namespace WinFormsSniffer
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SelectList());
+            Application.Run(new SnifferForm());
         }
     }
 }

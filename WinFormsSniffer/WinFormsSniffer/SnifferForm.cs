@@ -184,13 +184,44 @@ namespace WinFormsSniffer
             textBox1.Enabled = true;
             Close.Enabled = false;
         }
+        /// <summary>
+        /// 选择网卡
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SelectNetCard_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (SelectNetCard.SelectedIndex >= 0 && SelectNetCard.SelectedIndex < _interfaceList.Count)
+            {
+                //SnifferForm sniffer = new SnifferForm(interfaceList, comboBox1.SelectedIndex);
+                selectedIntIndex = SelectNetCard.SelectedIndex;
+                wifi_device = _interfaceList[selectedIntIndex];
 
-        public SnifferForm(List<LibPcapLiveDevice> interfaces, int selectedIndex)
+            }
+        }
+
+        private void SnifferForm_Load(object sender, EventArgs e)
+        {
+            LibPcapLiveDeviceList devices = LibPcapLiveDeviceList.Instance; // 
+
+            foreach (var device in devices)
+            {
+                if (!device.Interface.Addresses.Exists(a => a != null && a.Addr != null && a.Addr.ipAddress != null)) continue;
+                var devInterface = device.Interface;
+                var friendlyName = devInterface.FriendlyName;
+                var description = devInterface.Description;
+
+                _interfaceList.Add(device);
+                SelectNetCard.Items.Add(friendlyName);
+            }
+        }
+
+        public SnifferForm()
         {
             InitializeComponent();
-            this._interfaceList = interfaces;
+            /*this._interfaceList = interfaces;
             this.selectedIntIndex = selectedIndex;
-            wifi_device = _interfaceList[selectedIntIndex];
+            wifi_device = _interfaceList[selectedIntIndex];*/
         }
 
         /// <summary>
@@ -200,38 +231,45 @@ namespace WinFormsSniffer
         /// <param name="e"></param>
         private void Start_Click(object sender, EventArgs e)
         {
-            if (StartSniffing == false)
+            if (SelectNetCard.SelectedIndex >= 0 && SelectNetCard.SelectedIndex < _interfaceList.Count)
             {
-                File.Delete(Environment.CurrentDirectory + "sniffer.pcap");
-                wifi_device.OnPacketArrival += Device_OnPacketArrival;
-                sniffing = new Thread(new ThreadStart(Sniffing_Process));
-                sniffing.Start();
-                Start.Enabled = false;
-                Close.Enabled = true;
-                textBox1.Enabled = false;
-
-            }
-            else if (StartSniffing)
-            {
-                if (MessageBox.Show("您的数据包已被捕获到文件中，开始新的捕获将覆盖现有的捕获。", "确认", MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning) == DialogResult.OK)
+                if (StartSniffing == false)
                 {
-                    // 点击了确定
                     File.Delete(Environment.CurrentDirectory + "sniffer.pcap");
-                    listView1.Items.Clear();
-                    capturedPackets_list.Clear();
-                    packetNumber = 1;
-                    textBox2.Text = "";
                     wifi_device.OnPacketArrival += Device_OnPacketArrival;
-                    sniffing = new Thread(Sniffing_Process);
+                    sniffing = new Thread(new ThreadStart(Sniffing_Process));
                     sniffing.Start();
                     Start.Enabled = false;
                     Close.Enabled = true;
                     textBox1.Enabled = false;
-                }
-            }
 
-            StartSniffing = true;
+                }
+                else if (StartSniffing)
+                {
+                    if (MessageBox.Show("您的数据包已被捕获到文件中，开始新的捕获将覆盖现有的捕获。", "确认", MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning) == DialogResult.OK)
+                    {
+                        // 点击了确定
+                        File.Delete(Environment.CurrentDirectory + "sniffer.pcap");
+                        listView1.Items.Clear();
+                        capturedPackets_list.Clear();
+                        packetNumber = 1;
+                        textBox2.Text = "";
+                        wifi_device.OnPacketArrival += Device_OnPacketArrival;
+                        sniffing = new Thread(Sniffing_Process);
+                        sniffing.Start();
+                        Start.Enabled = false;
+                        Close.Enabled = true;
+                        textBox1.Enabled = false;
+                    }
+                }
+                StartSniffing = true;
+            }
+            else
+            {
+                MessageBox.Show("请选择网卡","提示");
+            }
+            
         }
 
         public void Device_OnPacketArrival(object sender, SharpPcap.CaptureEventArgs e)
