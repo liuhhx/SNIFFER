@@ -175,11 +175,10 @@ namespace WinFormsSniffer
 
         private void Close_Click(object sender, EventArgs e)
         {
-            sniffing.Interrupt(); //todo 醒目 abort 在 dotnet core中好像不行
+            sniffing.Interrupt(); //todo 醒目 abort 在 dotnet core中好像不行 改用interrupt
             wifi_device.StopCapture();
             wifi_device.Close();
             captureFileWriter.Close();
-
             Start.Enabled = true;
             textBox1.Enabled = true;
             Close.Enabled = false;
@@ -310,7 +309,6 @@ namespace WinFormsSniffer
                 item.SubItems.Add(length);
                 // todo 以上这5项为什么不显示？
                 // listview设置问题
-                // 这个语法糖效果不太好
                 /*void Action() => listView1.Items.Add(item);
                 listView1.Invoke((Action) Action);*/
                 Action action = () => listView1.Items.Add(item);
